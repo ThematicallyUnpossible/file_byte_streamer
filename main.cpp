@@ -2,26 +2,28 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <iostream>
+#include <string>
 
 #define G_OPERATION_SIZE 100
 
-int main(int argc, char* argv[])
+int main()
 {
-    if(argc != 3){
-        std::cerr << "[error] improper use of syntax : ./file_byte_transfer <Source> <Target>";
-        return 1;
-    }
 
-    const char* source = { argv[1] };
-    const char* target = { argv[2] };
+    std::cout << "Source file : ";
+    std::string source{};
+    std::getline(std::cin, source);
 
-    int source_fd = open(source, O_RDONLY);
+    std::cout << "Target file : ";
+    std::string target{};
+    std::getline(std::cin, target);
+
+    int source_fd = open(source.c_str(), O_RDONLY);
     if(source_fd == -1){
         std::cerr << "- unable to get " <<  source << "'s file descriptor.\n";
         return 1;
     }
 
-    int target_fd = open(target, O_WRONLY);
+    int target_fd = open(target.c_str(), O_WRONLY);
     if(target_fd == -1){
         std::cerr << "- unable to get " << target <<  "'s file descriptor.\n";
         return 1;
