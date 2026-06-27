@@ -3,8 +3,10 @@
 #include <unistd.h>
 #include <iostream>
 #include <string>
+#include <chrono>
+#include <iomanip>
 
-#define G_OPERATION_SIZE 100
+#define G_OPERATION_SIZE 256
 
 int main()
 {
@@ -33,9 +35,15 @@ int main()
     int BYTEREAD{};
     int BYTEWRITE{};
 
+    auto beginning = std::chrono::high_resolution_clock::now();
+
     while( (BYTEREAD = read(source_fd, BUFFER, G_OPERATION_SIZE )) != -1 ){
         if(BYTEREAD == 0){
-            std::cout << "task finished.";
+            auto end = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> elapsed {end - beginning};
+            std::cout << "task finished in ";
+            std::cout << std::fixed << std::setprecision(4);
+            std::cout << elapsed.count() << "s\n";
             break;
         }
         else if(BYTEREAD > 0){
@@ -55,6 +63,7 @@ int main()
 
 
 
-
+    close(source_fd);
+    close(target_fd);
     return 0;
 }
